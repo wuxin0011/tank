@@ -75,14 +75,17 @@ public class Draw extends JPanel implements KeyListener, Runnable {
         }
 
         // 添加其他坦克信息 保证坦克之间不能碰撞
-        p1.setOtherTankVector(tankVector);
-        for (Tank tank : tankVector) {
-            tank.setOtherTankVector(tankVector);
-        }
+        // p1.setOtherTankVector(tankVector);
+        // for (Tank tank : tankVector) {
+        //     tank.setOtherTankVector(tankVector);
+        // }
 
 
     }
 
+    /**
+     * 绘制爆炸效果图片
+     */
     void drawImage() {
         for (int i = 0; i < boomVector.size(); i++) {
             Boom boom = boomVector.get(i);
@@ -100,7 +103,9 @@ public class Draw extends JPanel implements KeyListener, Runnable {
         }
     }
 
-    // 读取击中敌人坦克数量
+    /**
+     * 读取击中敌人坦克数量，默认读取历史记录
+     */
     void readHitEnemyTank() {
         Font font = new Font("楷体", Font.BOLD, 20);
         graphics.setFont(font);
@@ -116,7 +121,7 @@ public class Draw extends JPanel implements KeyListener, Runnable {
     }
 
     /**
-     * 绘制默认障碍物！
+     * 绘制障碍物
      */
     void initObstacles() {
         drawObstacles(0, 300, Direction.RIGHT, Color.BLUE, 4);
@@ -162,13 +167,14 @@ public class Draw extends JPanel implements KeyListener, Runnable {
             }
         }
 
-        if (tankVector.size() == 1) {
+        // 当敌人坦克数量为0重新绘制5个坦克
+        if (tankVector.size() == 0) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < enemyTankNum; i++) {
                 EnemyTank enemyTank = Valid.randomEnemyTank(p1);
                 enemyTank.setGraphics(graphics);
                 new Thread(enemyTank).start();
@@ -181,25 +187,27 @@ public class Draw extends JPanel implements KeyListener, Runnable {
         tankVector.removeIf(tank -> !tank.isAlive());
 
 
+        // 敌人坦克线程
         for (Tank tank : tankVector) {
             EnemyTank enemyTank = null;
             if (tank != null && tank.isAlive()) {
                 drawTank(tank);
-                if (tank instanceof EnemyTank) {
-                    enemyTank = (EnemyTank) tank;
-                    // // 创建子弹线程
-                    // enemyTank.launchShot();
-                    // // 敌方坦克发射子弹
-                    // enemyTank.tankShot();
-                    // 判断敌人坦克是否击中我方坦克
-                    // Vector<Shot> shotVector = enemyTank.getShotVector();
-                    // for (Shot shot : shotVector) {
-                    //     if (shot != null && shot.isAlive() && p1 != null && p1.isAlive() && Valid.scaleIsHit(shot, p1)) {
-                    //         p1.setAlive(false);
-                    //         shot.setAlive(false);
-                    //     }
-                    // }
-                }
+                // 创建子弹线程
+                // if (tank instanceof EnemyTank) {
+                //     enemyTank = (EnemyTank) tank;
+                //     // 创建子弹线程
+                //     enemyTank.launchShot();
+                //     // 敌方坦克发射子弹
+                //     enemyTank.tankShot();
+                //     // 判断敌人坦克是否击中我方坦克
+                //     Vector<Shot> shotVector = enemyTank.getShotVector();
+                //     for (Shot shot : shotVector) {
+                //         if (shot != null && shot.isAlive() && p1 != null && p1.isAlive() && Valid.scaleIsHit(shot, p1)) {
+                //             p1.setAlive(false);
+                //             shot.setAlive(false);
+                //         }
+                //     }
+                // }
             }
         }
     }

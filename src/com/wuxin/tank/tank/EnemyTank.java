@@ -60,7 +60,7 @@ public class EnemyTank extends Tank {
     }
 
     // 发射子弹
-    void launchShot() {
+    public void launchShot() {
         Vector<Shot> shotVector = getShotVector();
         while (shotVector.size() < 2) {
             try {
